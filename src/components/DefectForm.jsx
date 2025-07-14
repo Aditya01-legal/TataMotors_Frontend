@@ -43,7 +43,7 @@ const DefectForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://tatamotors-backend-2.onrender.com/api/defects/add", formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/defects/add`, formData);
 
       alert("Defect submitted successfully!");
     } catch (err) {
