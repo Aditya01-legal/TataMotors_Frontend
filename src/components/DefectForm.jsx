@@ -18,99 +18,175 @@ const DefectForm = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/defects/add`, formData);
-      alert("Defect submitted successfully!");
-      setFormData({
-        date: "",
-        issueReportedArea: "",
-        issueDescription: "",
-        partDescription: "",
-        partNumber: "",
-        supplierName: "",
-        actionInitiated: "",
-        rootCause: "",
-        pca: "",
-        status: "",
-        responsibility: "",
-        issueAttendedBy: "",
-      });
-    } catch (err) {
-      console.error("Error submitting form:", err);
-      alert("Failed to submit defect.");
+      const response = await axios.post(
+        "https://tatamotors-backend-2.onrender.com/api/defects/add",
+        formData
+      );
+      alert("Defect added successfully!");
+      setFormData({}); // reset if needed
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Submission failed");
     }
   };
 
+  const areas = ["LINE 1", "LINE 2", "LINE 3", "NTL", "PTL", "FINAL", "ENGINE"];
+  const statuses = ["Open", "Closed", "In Progress"];
+  const responsibilities = [
+    "KUNDAN KUMAR",
+    "SAURAV DATTA",
+    "SAURABHA SENAPATI",
+    "BHASKAR BASU",
+  ];
+
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Date:</label>
-      <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-gray-900 text-white rounded-xl shadow-lg">
+      <h2 className="text-2xl font-bold mb-6 text-center">Defect Submission Form</h2>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+          required
+        />
 
-      <label>Issue Reported Area:</label>
-      <select name="issueReportedArea" value={formData.issueReportedArea} onChange={handleChange} required>
-        <option value="">Select</option>
-        <option value="LINE 1">LINE 1</option>
-        <option value="LINE 2">LINE 2</option>
-        <option value="LINE 3">LINE 3</option>
-        <option value="NTL">NTL</option>
-        <option value="PTL">PTL</option>
-        <option value="FINAL">FINAL</option>
-        <option value="ENGINE">ENGINE</option>
-      </select>
+        <select
+          name="issueReportedArea"
+          value={formData.issueReportedArea}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+          required
+        >
+          <option value="">Select Issue Reported Area</option>
+          {areas.map((area) => (
+            <option key={area} value={area}>
+              {area}
+            </option>
+          ))}
+        </select>
 
-      <label>Issue Description:</label>
-      <textarea name="issueDescription" value={formData.issueDescription} onChange={handleChange} required />
+        <textarea
+          name="issueDescription"
+          placeholder="Issue Description"
+          value={formData.issueDescription}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+          required
+        />
 
-      <label>Part Description:</label>
-      <textarea name="partDescription" value={formData.partDescription} onChange={handleChange} required />
+        <textarea
+          name="partDescription"
+          placeholder="Part Description"
+          value={formData.partDescription}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+        />
 
-      <label>Part Number:</label>
-      <textarea name="partNumber" value={formData.partNumber} onChange={handleChange} required />
+        <input
+          type="text"
+          name="partNumber"
+          placeholder="Part Number"
+          value={formData.partNumber}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+        />
 
-      <label>Supplier Name:</label>
-      <textarea name="supplierName" value={formData.supplierName} onChange={handleChange} required />
+        <input
+          type="text"
+          name="supplierName"
+          placeholder="Supplier Name"
+          value={formData.supplierName}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+        />
 
-      <label>Action Initiated:</label>
-      <textarea name="actionInitiated" value={formData.actionInitiated} onChange={handleChange} required />
+        <textarea
+          name="actionInitiated"
+          placeholder="Action Initiated"
+          value={formData.actionInitiated}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+        />
 
-      <label>Root Cause:</label>
-      <textarea name="rootCause" value={formData.rootCause} onChange={handleChange} required />
+        <textarea
+          name="rootCause"
+          placeholder="Root Cause"
+          value={formData.rootCause}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+        />
 
-      <label>PCA:</label>
-      <textarea name="pca" value={formData.pca} onChange={handleChange} required />
+        <textarea
+          name="pca"
+          placeholder="PCA"
+          value={formData.pca}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+        />
 
-      <label>Status:</label>
-      <select name="status" value={formData.status} onChange={handleChange} required>
-        <option value="">Select</option>
-        <option value="open">Open</option>
-        <option value="closed">Closed</option>
-        <option value="in progress">In Progress</option>
-      </select>
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+          required
+        >
+          <option value="">Select Status</option>
+          {statuses.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
 
-      <label>Responsibility:</label>
-      <select name="responsibility" value={formData.responsibility} onChange={handleChange} required>
-        <option value="">Select</option>
-        <option value="KUNDAN KUMAR">KUNDAN KUMAR</option>
-        <option value="SAURAV DATTA">SAURAV DATTA</option>
-        <option value="SAURABHA SENAPATI">SAURABHA SENAPATI</option>
-        <option value="BHASKAR BASU">BHASKAR BASU</option>
-      </select>
+        <select
+          name="responsibility"
+          value={formData.responsibility}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white"
+          required
+        >
+          <option value="">Select Responsibility</option>
+          {responsibilities.map((r) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
 
-      <label>Issue Attended By:</label>
-      <textarea name="issueAttendedBy" value={formData.issueAttendedBy} onChange={handleChange} required />
+        <input
+          type="text"
+          name="issueAttendedBy"
+          placeholder="Issue Attended By"
+          value={formData.issueAttendedBy}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 text-white col-span-full"
+        />
 
-      <button type="submit">Submit Defect</button>
-    </form>
+        <button
+          type="submit"
+          className="col-span-full bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded text-white mt-2"
+        >
+          Submit Defect
+        </button>
+      </form>
+    </div>
   );
 };
 
 export default DefectForm;
+
 
 
 
