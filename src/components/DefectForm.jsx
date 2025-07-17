@@ -3,120 +3,116 @@ import axios from "axios";
 
 const DefectForm = () => {
   const [formData, setFormData] = useState({
-    vehicleSystem: "",
-    vehicleSystemOther: "",
-    severity: "",
+    date: "",
+    issueReportedArea: "",
+    issueDescription: "",
+    partDescription: "",
+    partNumber: "",
+    supplierName: "",
+    actionInitiated: "",
+    rootCause: "",
+    pca: "",
     status: "",
-    vehicleModel: "",
-    vehicleModelOther: "",
-    assignedTo: "",
-    reportedBy: "",
-    reportedOn: "",
-    resolutionDate: "",
-    description: "",
-    image: "",
+    responsibility: "",
+    issueAttendedBy: "",
   });
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.size > 5 * 1024 * 1024) {
-      alert("Max 5MB file allowed");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData((prev) => ({
-        ...prev,
-        image: reader.result,
-      }));
-    };
-    if (file) reader.readAsDataURL(file);
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/api/defects/add`, formData);
-
       alert("Defect submitted successfully!");
+      setFormData({
+        date: "",
+        issueReportedArea: "",
+        issueDescription: "",
+        partDescription: "",
+        partNumber: "",
+        supplierName: "",
+        actionInitiated: "",
+        rootCause: "",
+        pca: "",
+        status: "",
+        responsibility: "",
+        issueAttendedBy: "",
+      });
     } catch (err) {
       console.error("Error submitting form:", err);
-      alert("Submission failed. Check console.");
+      alert("Failed to submit defect.");
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-xl shadow-lg mt-10">
-      <h1 className="text-2xl font-bold mb-6 text-center">Defect Logging Form</h1>
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
-        {/* Vehicle System Dropdown */}
-        <select name="vehicleSystem" value={formData.vehicleSystem} onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600">
-          <option value="">Select Vehicle System</option>
-          <option>Engine</option>
-          <option>Transmission</option>
-          <option>Brakes</option>
-          <option>Suspension</option>
-          <option>Electrical</option>
-          <option>Others</option>
-        </select>
+    <form onSubmit={handleSubmit}>
+      <label>Date:</label>
+      <input type="date" name="date" value={formData.date} onChange={handleChange} required />
 
-        {/* Show "Other Vehicle System" if 'Others' selected */}
-        {formData.vehicleSystem === "Others" && (
-          <input name="vehicleSystemOther" placeholder="Other Vehicle System" onChange={handleChange} className="p-2 rounded bg-gray-800 border border-gray-600" />
-        )}
+      <label>Issue Reported Area:</label>
+      <select name="issueReportedArea" value={formData.issueReportedArea} onChange={handleChange} required>
+        <option value="">Select</option>
+        <option value="LINE 1">LINE 1</option>
+        <option value="LINE 2">LINE 2</option>
+        <option value="LINE 3">LINE 3</option>
+        <option value="NTL">NTL</option>
+        <option value="PTL">PTL</option>
+        <option value="FINAL">FINAL</option>
+        <option value="ENGINE">ENGINE</option>
+      </select>
 
-        {/* Severity Dropdown */}
-        <select name="severity" value={formData.severity} onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600">
-          <option value="">Select Severity</option>
-          <option>Low</option>
-          <option>Medium</option>
-          <option>High</option>
-          <option>Critical</option>
-        </select>
+      <label>Issue Description:</label>
+      <textarea name="issueDescription" value={formData.issueDescription} onChange={handleChange} required />
 
-        {/* Status Dropdown */}
-        <select name="status" value={formData.status} onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600">
-          <option value="">Select Status</option>
-          <option>Open</option>
-          <option>In Progress</option>
-          <option>Resolved</option>
-          <option>Closed</option>
-        </select>
+      <label>Part Description:</label>
+      <textarea name="partDescription" value={formData.partDescription} onChange={handleChange} required />
 
-        {/* Vehicle Model Dropdown */}
-        <select name="vehicleModel" value={formData.vehicleModel} onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600">
-          <option value="">Select Vehicle Model</option>
-          <option>Model A</option>
-          <option>Model B</option>
-          <option>Model C</option>
-          <option>Other</option>
-        </select>
+      <label>Part Number:</label>
+      <textarea name="partNumber" value={formData.partNumber} onChange={handleChange} required />
 
-        {/* Show "Other Vehicle Model" if 'Other' selected */}
-        {formData.vehicleModel === "Other" && (
-          <input name="vehicleModelOther" placeholder="Other Vehicle Model" onChange={handleChange} className="p-2 rounded bg-gray-800 border border-gray-600" />
-        )}
+      <label>Supplier Name:</label>
+      <textarea name="supplierName" value={formData.supplierName} onChange={handleChange} required />
 
-        <input name="assignedTo" placeholder="Assigned To" onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600" />
-        <input name="reportedBy" placeholder="Reported By" onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600" />
-        <input type="date" name="reportedOn" onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600" />
-        <input type="date" name="resolutionDate" onChange={handleChange} className="p-2 rounded bg-gray-800 border border-gray-600" />
-        <textarea name="description" placeholder="Defect Description" onChange={handleChange} required className="p-2 rounded bg-gray-800 border border-gray-600"></textarea>
-        <input type="file" accept="image/*" onChange={handleImageChange} className="p-2 rounded bg-gray-800 border border-gray-600" />
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Submit</button>
-      </form>
-    </div>
+      <label>Action Initiated:</label>
+      <textarea name="actionInitiated" value={formData.actionInitiated} onChange={handleChange} required />
+
+      <label>Root Cause:</label>
+      <textarea name="rootCause" value={formData.rootCause} onChange={handleChange} required />
+
+      <label>PCA:</label>
+      <textarea name="pca" value={formData.pca} onChange={handleChange} required />
+
+      <label>Status:</label>
+      <select name="status" value={formData.status} onChange={handleChange} required>
+        <option value="">Select</option>
+        <option value="open">Open</option>
+        <option value="closed">Closed</option>
+        <option value="in progress">In Progress</option>
+      </select>
+
+      <label>Responsibility:</label>
+      <select name="responsibility" value={formData.responsibility} onChange={handleChange} required>
+        <option value="">Select</option>
+        <option value="KUNDAN KUMAR">KUNDAN KUMAR</option>
+        <option value="SAURAV DATTA">SAURAV DATTA</option>
+        <option value="SAURABHA SENAPATI">SAURABHA SENAPATI</option>
+        <option value="BHASKAR BASU">BHASKAR BASU</option>
+      </select>
+
+      <label>Issue Attended By:</label>
+      <textarea name="issueAttendedBy" value={formData.issueAttendedBy} onChange={handleChange} required />
+
+      <button type="submit">Submit Defect</button>
+    </form>
   );
 };
 
 export default DefectForm;
+
+
 
 
 
