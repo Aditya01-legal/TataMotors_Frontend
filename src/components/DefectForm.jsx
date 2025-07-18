@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const DefectForm = () => {
   const [formData, setFormData] = useState({
-    pdc: '',
     issueArea: '',
     issueDescription: '',
     partDescription: '',
@@ -13,6 +12,7 @@ const DefectForm = () => {
     ica: '',
     rootCause: '',
     pca: '',
+    pdc: '',
     status: '',
     responsibility: '',
     issueReportedBy: ''
@@ -32,7 +32,6 @@ const DefectForm = () => {
       await axios.post('https://tatamotors-backend-2.onrender.com/api/defects/add', formData);
       alert('Defect submitted successfully');
       setFormData({
-        pdc: '',
         issueArea: '',
         issueDescription: '',
         partDescription: '',
@@ -42,6 +41,7 @@ const DefectForm = () => {
         ica: '',
         rootCause: '',
         pca: '',
+        pdc: '',
         status: '',
         responsibility: '',
         issueReportedBy: ''
@@ -56,12 +56,6 @@ const DefectForm = () => {
     <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center p-6">
       <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-2xl">
         <h2 className="text-2xl font-bold mb-6 text-center">Daily Issue Tracking</h2>
-
-        <div className="mb-4">
-          <label>PDC (Date):</label>
-          <input type="date" name="pdc" value={formData.pdc} onChange={handleChange}
-            className="w-full p-2 bg-gray-700 text-white rounded mt-1" required />
-        </div>
 
         <div className="mb-4">
           <label>Issue Reported Area:</label>
@@ -126,6 +120,13 @@ const DefectForm = () => {
             className="w-full p-2 bg-gray-700 text-white rounded mt-1" required />
         </div>
 
+        {/* PDC moved here after PCA */}
+        <div className="mb-4">
+          <label>PDC (Date):</label>
+          <input type="date" name="pdc" value={formData.pdc} onChange={handleChange}
+            className="w-full p-2 bg-gray-700 text-white rounded mt-1" required />
+        </div>
+
         <div className="mb-4">
           <label>Status:</label>
           <select name="status" value={formData.status} onChange={handleChange}
@@ -158,6 +159,7 @@ const DefectForm = () => {
 };
 
 export default DefectForm;
+
 
 
 
